@@ -16,7 +16,7 @@
 
         （あくまで、今回は化合物の観測確率の偏りのみを考慮する）
     - イメージ <br />
-    <img src="./assets/drug_target_image.png" width="200px">
+    <img src="./bias/memo/assets/drug_target_image.png" width="200px">
 
 ## 手法
 - Inverse Propensity Score
