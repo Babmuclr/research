@@ -99,7 +99,7 @@ class Net(torch.nn.Module):
         return out
 
 if torch.cuda.is_available():
-    device = torch.device('cuda:0')
+    device = torch.device('cuda:1')
     print('The code uses GPU...')
 else:
     device = torch.device('cpu')
@@ -161,8 +161,8 @@ dataset_names = ["human", "celegans"]
 
 for dataset_name in dataset_names:
     for random_state in range(100):
-        train_filename = "../../data/maked/bias/" + str(random_state) + "/train_" + dataset_name + ".csv"
-        test_filename = "../../data/maked/bias/" + str(random_state) + "/test_" + dataset_name + ".csv"
+        train_filename = "../../data/maked/bias/" + str(random_state) + "/train_" + dataset_name + "_link_freq2.csv"
+        test_filename = "../../data/maked/bias/" + str(random_state) + "/test_" + dataset_name + "_link_freq2.csv"
         
         train_datas = parse_data(train_filename)
         test_datas = parse_data(test_filename, is_train=False)
@@ -195,7 +195,7 @@ for dataset_name in dataset_names:
         score_baseline = test(tl=test_loader, model=model_baseline)
         score_propose = test(tl=test_loader, model=model_propose)
 
-        with open("./" + dataset_name+"_baseline.txt", "a") as f:
+        with open("./" + dataset_name+"_baseline_link_freq2.txt", "a") as f:
             f.write(str(score_baseline) +"\n")
-        with open("./" + dataset_name+"_propose.txt", "a") as f:
+        with open("./" + dataset_name+"_propose_link_freq2.txt", "a") as f:
             f.write(str(score_propose) +"\n")

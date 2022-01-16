@@ -28,7 +28,7 @@ def calc_weight(x, counts):
 
 for dataset_name in dataset_names:
     filename = "../../data/maked/default/" + dataset_name + ".csv"
-    for random_state in range(10):
+    for random_state in range(100):
         df = pd.read_csv("../../data/maked/default/" + dataset_name + ".csv", header=0)
         df = df.sample(frac=1, random_state=random_state)
         N = len(df)

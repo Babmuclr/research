@@ -11,7 +11,7 @@ from rdkit.Chem import rdMolDescriptors
 dataset_names = ["human", "celegans"]
 
 def sigmoid(x):
-    return 1.0 / (1.0 + np.exp(x))
+    return 1.0 / (1.0 + np.exp(x+2))
 
 def observed(x):
     coin = random.random()
@@ -35,18 +35,15 @@ for dataset_name in dataset_names:
         train_len = int(N * 0.1)
         df_test = df[:train_len]
         df = df[train_len:]
-        df_compound = pd.DataFrame(df["compound"].unique(), columns=["compound"])
-        df_compound["weight"] = df_compound["compound"].map(lambda sm: rdMolDescriptors._CalcMolWt(Chem.MolFromSmiles(sm)))
-        df_compound["weight_norm"] = (df_compound["weight"] - df_compound["weight"].mean()) / df_compound["weight"].std()
-        df_compound["prob"] = df_compound["weight_norm"].map(sigmoid)
-        df_compound["observed"] = df_compound["prob"].map(observed)
-        df = pd.merge(df, df_compound[["compound", "observed"]], how="left", on="compound")
+        df["molecular_weight"] = df["compound"].map(lambda sm: rdMolDescriptors._CalcMolWt(Chem.MolFromSmiles(sm)))
+        df["weight_norm"] = (df["molecular_weight"] - df["molecular_weight"].mean()) / df["molecular_weight"].std()
+        df["prob"] = df["weight_norm"].map(sigmoid)
+        df["observed"] = df["prob"].map(observed)
         df_observed = df[df["observed"] == 1]
         count_compound = df_observed["compound"].value_counts().to_dict()
         df_observed["weight"] = df_observed["compound"].apply(calc_weight, counts=count_compound)
 
-        if dataset_name == "human":
-            os.mkdir("../../data/maked/bias/" + str(random_state) + "/")
+        # os.mkdir("../../data/maked/bias/" + str(random_state) + "/")
 
-        df_observed[["compound", "protein", "label", "weight"]].to_csv("../../data/maked/bias/" + str(random_state) + "/train_" + dataset_name + ".csv", index=None)
-        df_test.to_csv("../../data/maked/bias/" + str(random_state) + "/test_" + dataset_name + ".csv", index=None)
+        df_observed[["compound", "protein", "label", "weight"]].to_csv("../../data/maked/bias/" + str(random_state) + "/train_" + dataset_name + "_link_stronger.csv", index=None)
+        df_test.to_csv("../../data/maked/bias/" + str(random_state) + "/test_" + dataset_name + "_link_stronger.csv", index=None)
